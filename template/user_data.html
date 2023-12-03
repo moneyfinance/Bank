@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <style>
+        :root {
+            --primary-color: rgb(11, 78, 179);
+          }
+          
+          *,
+          *::before,
+          *::after {
+            box-sizing: border-box;
+          }
+          
+          body {
+            background: rgba(0, 0, 0, 0.5) url('{% static "images/background.webp" %}') center center no-repeat;
+            background-size: cover;
+            font-family: Montserrat, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            display: grid;
+            min-height: 100vh;
+          }
+          /* Global Stylings */
+          label {
+            display: block;
+            margin-bottom: 0.5rem;
+          }
+          
+          input {
+            display: block;
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 0.25rem;
+          }
+          
+          .width-50 {
+            width: 50%;
+          }
+          
+          .ml-auto {
+            margin-left: auto;
+          }
+          
+          .text-center {
+            text-align: center;
+          }
+          
+          /* Progressbar */
+          .progressbar {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            counter-reset: step;
+            margin: 2rem 0 4rem;
+          }
+          
+          .progressbar::before,
+          .progress {
+            content: "";
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 4px;
+            width: 100%;
+            background-color: #dcdcdc;
+            z-index: -1;
+          }
+          
+          .progress {
+            background-image: linear-gradient(to right,
+			rgb(255, 195, 110),
+			rgb(255, 146, 91));
+            width: 0%;
+            transition: 0.3s;
+          }
+          
+          .progress-step {
+            width: 2.1875rem;
+            height: 2.1875rem;
+            background-color: #dcdcdc;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+          
+          .progress-step::before {
+            counter-increment: step;
+            content: counter(step);
+          }
+          
+          .progress-step::after {
+            content: attr(data-title);
+            position: absolute;
+            top: calc(100% + 0.5rem);
+            font-size: 0.85rem;
+            color: #666;
+          }
+          
+          .progress-step-active {
+
+            background-image: linear-gradient(to right,
+			rgb(255, 195, 110),
+			rgb(255, 146, 91));
+          }
+          
+          /* Form */
+          .form {
+            width: clamp(320px, 30%, 430px);
+            position: relative;
+            margin: 80px auto;
+            border: 1px solid #ccc;
+            border-radius: 0.35rem;
+            padding: 1.5rem;
+          }
+          
+          .form-step {
+            display: none;
+            transform-origin: top;
+            animation: animate 0.5s;
+          }
+          
+          .form-step-active {
+            display: block;
+          }
+          
+          .form-group {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .form-group label {
+            width: 30%;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 65%;
+        }
+          
+          @keyframes animate {
+            from {
+              transform: scale(1, 0);
+              opacity: 0;
+            }
+            to {
+              transform: scale(1, 1);
+              opacity: 1;
+            }
+          }
+          
+          /* Button */
+          .btns-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+          }
+          
+          .btn {
+            padding: 0.75rem;
+            display: block;
+            text-decoration: none;
+            background-image : linear-gradient(to right,
+	rgb(0,57,118),
+	rgb(23,65,122)
+	);
+            /*background-image: linear-gradient(to right,
+			rgb(255, 195, 110),
+			rgb(255, 146, 91));*/
+            color: #f3f3f3;
+            text-align: center;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            transition: 0.3s;
+          }
+          .btn:hover {
+            box-shadow: 0 0 0 2px #fff, 0 0 0 3px var(--primary-color);
+          }
+          .hidden{
+            display : none;
+          }
+          .navbar {
+            width: 100%;
+            position: fixed;
+            top: 0;
+            background-image : linear-gradient(to right,
+            rgb(0,57,118),
+            rgb(23,65,122)
+            );
+            /*background-color: #ffffff; /* Set your desired background color */
+            /*box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow for styling */
+        }
+    
+        .navbar-brand {
+            padding: 0px; /* Adjust the padding as needed */
+            margin-left: 0px; /* Adjust the margin as needed */
+            color: rgb(255, 146, 91);
+            font-size: 1.5rem; /* Adjust the font size as needed */
+            font-weight: bold; /* Optionally, make the brand bold */
+        }
+    
+        .nav-link {
+            color: rgb(255, 146, 91);
+            margin-left: 40px; /* Adjust the margin as needed */
+            text-decoration: none;
+        }
+    
+        .btn-help {
+            margin-right: 40px; /* Adjust the margin as needed */
+        }
+
+        @media (max-width: 768px) {
+          .logo{
+            length : 100px;
+            width : 100px;
+          }
+          .navbar {
+              padding: 15px; /* Adjust padding for top and sides */
+          }
+  
+          .navbar-brand {
+              margin: 0; /* Reset margin for small screens */
+              margin-bottom: 10px; /* Add some space below the brand */
+          }
+  
+          .nav-link {
+              display: block; /* Make each link a block element */
+              margin: 0 0; /* Add space between links */
+          }
+  
+          .btn-help {
+              margin: 0 0; /* Add space below the help button */
+          }
+      }
+      .error-border {
+        border: 1px solid red;
+      }
+      .logo{
+        length : 150px;
+        width : 150px;
+      }
+
+    </style>
+    <script defer></script>
+    <title>Registraion Form</title>
+  </head>
+  <body>
+    <!--<nav class="navbar" id="navbar">
+        <div class="container">
+            <a class="navbar-brand" href="#">Bank</a>
+            <a style = "margin-left:500px;color: rgb(255, 146, 91);" class="" href="/login">Home</a>
+            <a style = "margin-left:-100px;color: rgb(255, 146, 91)" class="" href="#">Products</a>
+            <a style = "margin-left:-100px;color: rgb(255, 146, 91)" class="" href="#">About Us</a>
+            <button style="margin-right:-150px;" class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Help</button>
+        </div>
+    </nav>-->
+    <nav class="navbar" id="navbar">
+      <div class="container">
+          <div>
+            <a class="navbar-brand" href="#">
+              <img class = "logo" src="{% static 'images/logo.webp' %}" alt="Bank Logo">
+            </a>
+          </div>
+          {% comment %} <a class="nav-link" href="/login">Home</a>
+          <a class="nav-link" href="#">Products</a>
+          <a class="nav-link" href="#">About Us</a> {% endcomment %}
+          {% comment %} <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Help</button> {% endcomment %}
+      </div>
+    </nav>
+    <form action="#" class="form">
+      <h1 id = "form_name" class="text-center">Personal Info</h1>
+      <!-- Progress bar -->
+      <div class="progressbar">
+        <div class="progress" id="progress"></div>
+        
+        <div
+          class="progress-step progress-step-active"
+          data-title="Personal Info"
+        ></div>
+        <div class="progress-step" data-title="Loan Info"></div>
+        <div class="progress-step" data-title="Bank Detail"></div>
+      </div>
+
+      <!-- Steps -->
+      <div class="form-step form-step-active">
+        <div class="form-group">
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" name="firstName">
+        </div>
+
+        <div class="form-group">
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" name="lastName">
+        </div>
+
+        <div class="form-group">
+            <label for="dob">Date of Birth:</label>
+            <input type="date" id="dob" name="dob">
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email ID:</label>
+            <input type="email" id="email" name="email">
+        </div>
+
+        <div class="form-group">
+            <label for="maritalStatus">Marital Status:</label>
+            <select id="maritalStatus" name="maritalStatus">
+                <option value="single">Single</option>
+                <option value="married">Married</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="motherName">Mother's Name:</label>
+            <input type="text" id="motherName" name="motherName">
+        </div>
+
+        <div class="form-group">
+            <label for="landmark">Address - Landmark:</label>
+            <input type="text" id="landmark" name="landmark">
+        </div>
+
+        <div class="form-group">
+            <label for="city">Address - City:</label>
+            <input type="text" id="city" name="city">
+        </div>
+
+        <div class="form-group">
+            <label for="state">Address - State:</label>
+            <input type="text" id="state" name="state">
+        </div>
+
+        <div class="form-group">
+            <label for="pincode">Address - Pincode:</label>
+            <input type="text" id="pincode" name="pincode">
+        </div>
+        <div class="">
+          <a href="#" class="btn btn-next width-50 ml-auto">Next</a>
+        </div>
+      </div>
+      <!--Second step-->
+      <div class="form-step">
+        <div class="form-group">
+            <label for="maritalStatus">Loan Type:</label>
+            <select id="loantype" name="loantype">
+                <option value="personal">Personal</option>
+                <option value="business">Business</option>
+            </select>
+        </div>
+        <div class="form-group">
+          <label for="pancard">Pan Card No.</label>
+          <input type="text" name="pancard" id="pancard" />
+        </div>
+        <div class="form-group">
+            <label for="aadharcard">Aadhar Card No.</label>
+            <input type="text" name="aadharcard" id="aadharcard" />
+        </div>
+        <div class="form-group">
+            <label for="amount">Loan Amount</label>
+            <input type="number" name="amount" id="amount" />
+        </div>
+        <div class="form-group">
+          <label for="period">Deposite Period(months)</label>
+          <input type="number" name="period" id="period" />
+        </div>
+        <div class="form-group hidden" id="titr">
+            <label for="itr">Yearly ITR</label>
+            <input type="number" name="itr" id="itr" />
+        </div>
+        <div class="form-group hidden" id="tturnover">
+            <label for="turnover">Total Turnover</label>
+            <input type="number" name="turnover" id="turnover" />
+        </div>
+        <div class="form-group hidden" id="gst">
+            <label for="gstno">GST Number</label>
+            <input type="text" name="gstno" id="gstno" />
+        </div>
+        <div class="btns-group">
+          <a href="#" class="btn btn-prev">Previous</a>
+          <a type="submit" class="btn btn-next">Next</a>
+        </div>
+      </div>
+      <!--third step-->
+      <!--fourth step-->
+      <div class="form-step">
+        <div class="form-group">
+            <label for="bname">Bank Name</label>
+            <input type="text" name="bname" id="bname" />
+        </div>
+        <div class="form-group">
+            <label for="accountno">Acount Number</label>
+            <input type="number" name="accountno" id="accountno" oninput="validateInput(this)" />
+        </div>
+        <div class="form-group">
+            <label for="ifsc">IFSC Code</label>
+            <input type="number" name="ifsc" id="ifsc"/>
+        </div>
+        <div class="form-group">
+            <label for="branch">Branch Name</label>
+            <input type="text" name="branch" id="branch" />
+        </div>
+        <div class="btns-group">
+          <a href="#" class="btn btn-prev">Previous</a>
+          <input type="submit" value="Submit" onclick="submitData(event)" class="btn" />
+        </div>
+      </div>
+    </form>
+
+    <script defer>
+        const prevBtns = document.querySelectorAll(".btn-prev");
+        const nextBtns = document.querySelectorAll(".btn-next");
+        const progress = document.getElementById("progress");
+        const formSteps = document.querySelectorAll(".form-step");
+        const progressSteps = document.querySelectorAll(".progress-step");
+        const form_name = document.getElementById("form_name");
+
+        let formStepsNum = 0;
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log("done");
+            // Get the loan type and GST elements
+            const loanType = document.getElementById('loantype');
+            const gstField = document.getElementById('gst');
+            const titr = document.getElementById('titr');
+            const tturnover = document.getElementById('tturnover');
+
+            // Add change event listener to loan type
+            loanType.addEventListener('change', function () {
+                // Show or hide the GST field based on the selected loan type
+                gstField.classList.toggle('hidden', loanType.value !== 'business');
+                titr.classList.toggle('hidden', loanType.value !== 'business');
+                tturnover.classList.toggle('hidden', loanType.value !== 'business');
+            });
+        });
+
+        function validateInput(inputElement) {
+          // Remove the error class if the input is not empty
+          if (inputElement.value.trim() !== '') {
+              inputElement.classList.remove('error-border');
+          } else {
+              // Add the error class if the input is empty
+              inputElement.classList.add('error-border');
+          }
+        }
+
+
+        function submitData(event) {
+          event.preventDefault(); // Prevent the default form submission behavior
+        
+          const inputs = document.querySelectorAll('.form-step-active input');
+          let isValid = true;
+        
+          inputs.forEach((input) => {
+            if (input.value.trim() === '') {
+              input.classList.add('error-border');
+              isValid = false;
+            } else {
+              input.classList.remove('error-border');
+            }
+          });
+        
+          if (isValid) {
+            // Handle the form submission logic here
+            console.log('Form submitted successfully!');
+          } else {
+            console.log('Form validation failed. Please fill in all required fields.');
+          }
+        }
+        
+
+
+
+        var bar = document.getElementById("navbar");
+        nextBtns.forEach((btn) => {
+          btn.addEventListener("click", () => {
+            formStepsNum++;
+            formNameChange(formStepsNum);
+            updateFormSteps();
+            updateProgressbar();
+        });        
+        });
+
+        function formNameChange(num){
+          if(num === 0){
+            form_name.innerHTML = "Personal Info";
+          }
+          else if(num === 1){
+            form_name.innerHTML = "Loan Info";
+          }
+          else{
+            form_name.innerHTML = "Bank Info";
+          }
+        }
+
+        prevBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+            formStepsNum--;
+            formNameChange(formStepsNum);
+            updateFormSteps();
+            updateProgressbar();
+        });
+        });
+
+        function updateFormSteps() {
+        formSteps.forEach((formStep) => {
+            formStep.classList.contains("form-step-active") &&
+            formStep.classList.remove("form-step-active");
+        });
+
+        formSteps[formStepsNum].classList.add("form-step-active");
+        }
+
+        function updateProgressbar() {
+        progressSteps.forEach((progressStep, idx) => {
+            if (idx < formStepsNum + 1) {
+            progressStep.classList.add("progress-step-active");
+            } else {
+            progressStep.classList.remove("progress-step-active");
+            }
+        });
+
+        const progressActive = document.querySelectorAll(".progress-step-active");
+
+        progress.style.width =
+            ((progressActive.length - 1) / (progressSteps.length - 1)) * 100 + "%";
+        }
+    </script>
+  </body>
+</html>
